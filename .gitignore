@@ -1,3 +1,7 @@
+pretraining_data/*
+FLUE_data/*
+checkpoints/*
+
 # JetBrains PyCharm IDE
 .idea/
 
