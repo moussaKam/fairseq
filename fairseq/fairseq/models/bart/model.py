@@ -310,9 +310,11 @@ def bart_small_architecture(args):
     args.encoder_layers = getattr(args, 'encoder_layers', 2)
     args.encoder_attention_heads= getattr(args, 'encoder_attention_heads', 8)
     args.encoder_embed_dim = getattr(args, 'decoder_embed_dim', 512)
+    args.encoder_normalize_before = getattr(args, 'encoder_normalize_before', True)
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 4*512)
     args.decoder_layers = getattr(args, 'decoder_layers', 2)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads',8)
+    args.decoder_normalize_before = getattr(args, 'decoder_normalizae_before', True)
     bart_large_architecture(args)
 
 @register_model_architecture('bart', 'mbart_large')

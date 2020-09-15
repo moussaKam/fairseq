@@ -98,7 +98,9 @@ class DenoisingTask(FairseqTask):
     def setup_task(cls, args, **kwargs):
         """Setup the task.
         """
-        dictionary = Dictionary.load(os.path.join(args.data, 'dict.txt'))
+        paths = args.data.split(':')
+        assert len(paths) > 0
+        dictionary = Dictionary.load(os.path.join(paths[0], 'dict.txt'))
         logger.info('dictionary: {} types'.format(len(dictionary)))
         if not hasattr(args, 'shuffle_instance'):
             args.shuffle_instance = False
@@ -124,7 +126,7 @@ class DenoisingTask(FairseqTask):
         if dataset is None:
             raise FileNotFoundError('Dataset not found: {} ({})'.format(split, split_path))
 
-        dataset = StripTokenDataset(dataset, self.dictionary.eos())
+        #dataset = StripTokenDataset(dataset, self.dictionary.eos())
 
         # create continuous blocks of tokens
         dataset = TokenBlockDataset(
@@ -134,7 +136,7 @@ class DenoisingTask(FairseqTask):
                 pad=self.dictionary.pad(),
                 eos=self.dictionary.eos(),
                 break_mode=self.args.sample_break_mode,
-                document_sep_len=0
+                #document_sep_len=0
         )
 
         # prepend beginning-of-sentence token (<s>, equiv. to [CLS] in BERT)
