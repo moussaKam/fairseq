@@ -1,39 +1,23 @@
-#!/bin/bash
-#SBATCH --job-name=gpu-4nodes-fr
-#SBATCH --partition=gpu_p1
-#SBATCH --output=slurm_files/Travail-4nodes-fr-%j.out
-#SBATCH --error=slurm_files/Travail-4nodes-fr-%j.err
-#SBATCH --nodes=4
-#SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:4
-#SBATCH --time=15:00:00
-#SBATCH --cpus-per-task=40
-#SBATCH --hint=nomultithread
-
-module purge
-
-set -x
-
 LANGUAGE='fr'
 TASK='denoising'
 DATA_PATH='../../pretraining_data/data-bin-fr'
 MODEL_PATH='small_bart.pt'
 MAX_SENTENCES=64
 MAX_TOKENS=6000
-MAX_UPDATE=42000
-SAVE_INTERVAL=2000
+MAX_UPDATE=105000
+SAVE_INTERVAL=15000
 LR=0.0004
 MAX_EPOCH=20
-DISTRIBUTED_WORLD_SIZE=16
+DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../sentence_piece_multilingual.model'
 VALID_SUBSET='valid'
 
-TENSORBOARD_LOGS=../../tensorboard_logs/$task/$LANGUAGE/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_si${SAVE_INTERVAL}_lr${LR}_me${MAX_EPOCH} 
-SAVE_DIR=../../checkpoints/$task/$LANGUAGE/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_si${SAVE_INTERVAL}_lr${LR}_me${MAX_EPOCH}
+TENSORBOARD_LOGS=../../tensorboard_logs/$task/$LANGUAGE/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_si${SAVE_INTERVAL}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE} 
+SAVE_DIR=../../checkpoints/$task/$LANGUAGE/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_si${SAVE_INTERVAL}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}
 
 mkdir -p $SAVE_DIR
 
-srun fairseq-train $DATA_PATH \
+fairseq-train $DATA_PATH \
     --optimizer=adam \
     --adam-betas='(0.9, 0.999)' \
     --adam-eps=1e-06 \
@@ -41,7 +25,7 @@ srun fairseq-train $DATA_PATH \
     --bpe='sentencepiece' \
     --sentencepiece-vocab $SENTENCE_PIECE_MODEL \
     --clip-norm=0.1 \
-    --log-interval=10 \
+    --log-interval=100 \
     --mask=0.3 \
     --mask-length='span-poisson' \
     --mask-random=0.1 \
