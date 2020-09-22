@@ -1,6 +1,7 @@
 pretraining_data/*
 FLUE_data/*
 checkpoints/*
+logs/
 experiments/pretraining/slurm_files
 tensorboard_logs/
 # JetBrains PyCharm IDE
