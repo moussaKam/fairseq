@@ -8,7 +8,7 @@ parse.add_argument('--path_events', type=str, help='path to the tensorboard even
 args = parse.parse_args()
 
 path_events = args.path_events
-assert os.isdir(path_events)
+assert os.path.isdir(path_events)
 
 directories = [os.path.join(path_events, el) for el in os.listdir(path_events)]
 
