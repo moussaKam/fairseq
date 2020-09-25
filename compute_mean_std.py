@@ -34,5 +34,5 @@ for directory in directories:
             maxi = el
             max_test = test_scores[i]
     best_test.append(max_test)
-    
+
 print('mean: {}'.format(np.mean(best_test)), 'std: {}'.format(np.std(best_test)))

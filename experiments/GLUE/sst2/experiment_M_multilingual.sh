@@ -1,15 +1,15 @@
-DATA_SET='cls-dvd'
-MODEL='M_fr'
+DATA_SET='SST-2'
+MODEL='M_multilingual'
 TASK='sentence_prediction'
-DATA_PATH='../../../FLUE_data/data-FLUE-CLS-dvd'
-MODEL_PATH='../../../checkpoints/denoising/fr/ms64_mu105000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
-MAX_SENTENCES=32
-MAX_UPDATE=1500
-LR=1e-05
-MAX_EPOCH=30
+DATA_PATH='/datadisks/datadisk1/language-adaptive-pretraining/GLUE_data/SST-2-bin'
+MODEL_PATH='../../../checkpoints/denoising/mutilingual/ms64_mu150000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
+MAX_SENTENCES=128
+MAX_UPDATE=13162
+LR=2e-05
+MAX_EPOCH=25
 DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../../sentence_piece_multilingual.model'
-VALID_SUBSET='valid,test'
+VALID_SUBSET='valid'
 NUM_CLASSES=2
 SEED=$1
 
@@ -40,9 +40,7 @@ fairseq-train $DATA_PATH \
     --sentencepiece-vocab $SENTENCE_PIECE_MODEL \
     --maximize-best-checkpoint-metric \
     --best-checkpoint-metric 'accuracy' \
-    --no-save \
     --save-dir $SAVE_DIR \
-    --skip-invalid-size-inputs-valid-test \
     --fp16 \
     --lr-scheduler polynomial_decay \
     --lr $LR \

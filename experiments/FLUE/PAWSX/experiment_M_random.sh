@@ -1,10 +1,9 @@
-DATA_SET='cls-dvd'
-MODEL='M_fr'
+DATA_SET='cls-books'
 TASK='sentence_prediction'
-DATA_PATH='../../../FLUE_data/data-FLUE-CLS-dvd'
-MODEL_PATH='../../../checkpoints/denoising/fr/ms64_mu105000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
-MAX_SENTENCES=32
-MAX_UPDATE=1500
+DATA_PATH='../../../FLUE_data/data-FLUE-CLS-books'
+MODEL_PATH='small_bart.pt'
+MAX_SENTENCES=16
+MAX_UPDATE=3000
 LR=1e-05
 MAX_EPOCH=30
 DISTRIBUTED_WORLD_SIZE=1
@@ -13,8 +12,8 @@ VALID_SUBSET='valid,test'
 NUM_CLASSES=2
 SEED=$1
 
-TENSORBOARD_LOGS=../../../tensorboard_logs/$TASK/$DATA_SET/$MODEL/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}/$SEED
-SAVE_DIR=../../../checkpoints/$TASK/$DATA_SET/$MODEL/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}/$SEED
+TENSORBOARD_LOGS=../../../tensorboard_logs/$TASK/$DATA_SET/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}/$SEED
+SAVE_DIR=../../../checkpoints/$TASK/$DATA_SET/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}/$SEED
 
 CUDA_VISIBLE_DEVICES=0
 

@@ -1,11 +1,11 @@
-DATA_SET='cls-dvd'
+DATA_SET='PAWSX'
 MODEL='M_fr'
 TASK='sentence_prediction'
-DATA_PATH='../../../FLUE_data/data-FLUE-CLS-dvd'
+DATA_PATH='../../../FLUE_data/data-FLUE-PAWSX'
 MODEL_PATH='../../../checkpoints/denoising/fr/ms64_mu105000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
-MAX_SENTENCES=32
-MAX_UPDATE=1500
-LR=1e-05
+MAX_SENTENCES=64
+MAX_UPDATE=23200
+LR=5e-05
 MAX_EPOCH=30
 DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../../sentence_piece_multilingual.model'

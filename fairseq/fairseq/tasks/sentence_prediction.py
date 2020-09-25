@@ -137,7 +137,6 @@ class SentencePredictionTask(FairseqTask):
                 input1 = PrependTokenDataset(input1, self.args.separator_token)
 
             src_tokens = ConcatSentencesDataset(input0, input1)
-
         with data_utils.numpy_seed(self.args.seed):
             shuffle = np.random.permutation(len(src_tokens))
 
