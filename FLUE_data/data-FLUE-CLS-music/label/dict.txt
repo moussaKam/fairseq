@@ -1,4 +1,0 @@
-0 800
-1 800
-madeupword0000 0
-madeupword0001 0
