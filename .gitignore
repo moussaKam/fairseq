@@ -1,6 +1,6 @@
 pretraining_data/*
-FLUE_data/*
-GLUE_data/*
+FLUE_data/
+GLUE_data/
 checkpoints/*
 logs/
 experiments/pretraining/slurm_files
