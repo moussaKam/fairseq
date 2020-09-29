@@ -10,7 +10,7 @@ import torch.nn.functional as F
 
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
-
+from scipy import stats
 
 @register_criterion('sentence_prediction')
 class SentencePredictionCriterion(FairseqCriterion):
@@ -70,6 +70,9 @@ class SentencePredictionCriterion(FairseqCriterion):
             logging_output['TN'] = (torch.logical_and(preds == targets, targets == 0)).sum()
             logging_output['FP'] = (torch.logical_and(preds != targets, preds == 1)).sum()
             logging_output['FN'] = (torch.logical_and(preds != targets, preds == 0)).sum()
+        else:
+            logging_output['logits'] = logits.cpu().detach().numpy()
+            logging_output['targets'] = targets.cpu().detach().numpy()
         return loss, sample_size, logging_output
 
     @staticmethod
@@ -83,7 +86,6 @@ class SentencePredictionCriterion(FairseqCriterion):
         TN = sum(log.get('TN', 0) for log in logging_outputs)
         FP = sum(log.get('FP', 0) for log in logging_outputs)
         FN = sum(log.get('FN', 0) for log in logging_outputs)
-        
 
         metrics.log_scalar('loss', loss_sum / sample_size / math.log(2), sample_size, round=3)
         if sample_size != ntokens:
@@ -94,6 +96,8 @@ class SentencePredictionCriterion(FairseqCriterion):
             metrics.log_scalar('accuracy', 100.0 * ncorrect / nsentences, nsentences, round=2)
             metrics.log_scalar('mcc', 100.0 * (TP * TN - FP * FN) / (((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN)) ** .5), round=2) 
         
+        #if self.regression_target:
+            #print(log.get('logits', 0) for log in logging_outputs)
     @staticmethod
     def logging_outputs_can_be_summed() -> bool:
         """
