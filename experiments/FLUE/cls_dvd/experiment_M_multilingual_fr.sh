@@ -4,9 +4,15 @@ TASK='sentence_prediction'
 MODEL_PATH='../../../checkpoints/denoising/multilingual_fr/ms64_mu75000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
 DATA_PATH='../../../FLUE_data/data-FLUE-CLS-dvd'
 MAX_SENTENCES=32
+<<<<<<< HEAD
 MAX_UPDATE=1500
 LR=1e-05
 MAX_EPOCH=30
+=======
+MAX_UPDATE=1250
+LR=1e-05
+MAX_EPOCH=25
+>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
 DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../../sentence_piece_multilingual.model'
 VALID_SUBSET='valid,test'

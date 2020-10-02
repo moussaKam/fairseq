@@ -1,5 +1,5 @@
 DATA_SET='QNLI'
-MODEL='M_multilingual'
+MODEL='M_multilingual_en'
 TASK='sentence_prediction'
 DATA_PATH='/datadisks/datadisk1/language-adaptive-pretraining/GLUE_data/QNLI-bin'
 MODEL_PATH='../../../checkpoints/denoising/multilingual_en/ms64_mu75000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'

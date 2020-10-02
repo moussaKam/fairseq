@@ -3,10 +3,17 @@ MODEL='M_fr_multilingual'
 TASK='sentence_prediction'
 DATA_PATH='../../../FLUE_data/data-FLUE-PAWSX'
 MODEL_PATH='../../../checkpoints/denoising/multilingual_fr/ms64_mu75000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
+<<<<<<< HEAD
 MAX_SENTENCES=64
 MAX_UPDATE=30650
 LR=5e-05
 MAX_EPOCH=30
+=======
+MAX_SENTENCES=32
+MAX_UPDATE=10320
+LR=5e-05
+MAX_EPOCH=40
+>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
 DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../../sentence_piece_multilingual.model'
 VALID_SUBSET='valid,test'
@@ -23,7 +30,11 @@ fairseq-train $DATA_PATH \
     --restore-file $MODEL_PATH \
     --max-sentences $MAX_SENTENCES \
     --task $TASK \
+<<<<<<< HEAD
     --update-freq 1 \
+=======
+    --update-freq 6 \
+>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
     --add-prev-output-tokens \
     --reset-optimizer --reset-dataloader --reset-meters \
     --required-batch-size-multiple 1 \

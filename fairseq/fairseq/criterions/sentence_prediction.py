@@ -10,7 +10,11 @@ import torch.nn.functional as F
 
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
+#<<<<<<< HEAD
 from scipy import stats
+#=======
+
+#>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
 
 @register_criterion('sentence_prediction')
 class SentencePredictionCriterion(FairseqCriterion):
@@ -66,6 +70,7 @@ class SentencePredictionCriterion(FairseqCriterion):
         if not self.regression_target:
             preds = logits.argmax(dim=1)
             logging_output['ncorrect'] = (preds == targets).sum()
+#<<<<<<< HEAD
             logging_output['TP'] = (torch.logical_and(preds == targets, targets == 1)).sum()
             logging_output['TN'] = (torch.logical_and(preds == targets, targets == 0)).sum()
             logging_output['FP'] = (torch.logical_and(preds != targets, preds == 1)).sum()
@@ -73,6 +78,9 @@ class SentencePredictionCriterion(FairseqCriterion):
         else:
             logging_output['logits'] = logits.cpu().detach().numpy()
             logging_output['targets'] = targets.cpu().detach().numpy()
+#=======
+
+#>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
         return loss, sample_size, logging_output
 
     @staticmethod
@@ -82,10 +90,13 @@ class SentencePredictionCriterion(FairseqCriterion):
         ntokens = sum(log.get('ntokens', 0) for log in logging_outputs)
         nsentences = sum(log.get('nsentences', 0) for log in logging_outputs)
         sample_size = sum(log.get('sample_size', 0) for log in logging_outputs)
+#<<<<<<< HEAD
         TP = sum(log.get('TP', 0) for log in logging_outputs)
         TN = sum(log.get('TN', 0) for log in logging_outputs)
         FP = sum(log.get('FP', 0) for log in logging_outputs)
         FN = sum(log.get('FN', 0) for log in logging_outputs)
+#=======
+#>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
 
         metrics.log_scalar('loss', loss_sum / sample_size / math.log(2), sample_size, round=3)
         if sample_size != ntokens:
@@ -94,10 +105,14 @@ class SentencePredictionCriterion(FairseqCriterion):
         if len(logging_outputs) > 0 and 'ncorrect' in logging_outputs[0]:
             ncorrect = sum(log.get('ncorrect', 0) for log in logging_outputs)
             metrics.log_scalar('accuracy', 100.0 * ncorrect / nsentences, nsentences, round=2)
+#<<<<<<< HEAD
             metrics.log_scalar('mcc', 100.0 * (TP * TN - FP * FN) / (((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN)) ** .5), round=2) 
         
         #if self.regression_target:
             #print(log.get('logits', 0) for log in logging_outputs)
+#=======
+
+#>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
     @staticmethod
     def logging_outputs_can_be_summed() -> bool:
         """
