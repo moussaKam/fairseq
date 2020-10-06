@@ -1,17 +1,19 @@
-DATA_SET='STS-B'
-MODEL='M_multilingual'
-TASK='sentence_prediction'
-DATA_PATH='/datadisks/datadisk1/language-adaptive-pretraining/GLUE_data/STS-B-bin'
-MODEL_PATH='../../../checkpoints/denoising/mutilingual/ms64_mu150000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
+DATA_SET='summarization_fr'
+MODEL='M_multilingual_fr'
+TASK='translation'
+DATA_PATH='../../../summarization_fr_data/summarization_title/data-bin'
+MODEL_PATH='../../../checkpoints/denoising/multilingual_fr/ms64_mu75000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
 MAX_SENTENCES=32
-MAX_UPDATE=4400
-LR=3e-05
-MAX_EPOCH=20
+MAX_SENTENCE_VALID=300
+MAX_UPDATE=23952
+LR=1e-04
+MAX_EPOCH=25
 DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../../sentence_piece_multilingual.model'
-VALID_SUBSET='valid'
-NUM_CLASSES=1
+VALID_SUBSET='valid,test'
 SEED=$1
+SRC=article
+TGT=title
 
 TENSORBOARD_LOGS=../../../tensorboard_logs/$TASK/$DATA_SET/$MODEL/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}/$SEED
 SAVE_DIR=../../../checkpoints/$TASK/$DATA_SET/$MODEL/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}/$SEED
@@ -21,26 +23,27 @@ CUDA_VISIBLE_DEVICES=0
 fairseq-train $DATA_PATH \
     --restore-file $MODEL_PATH \
     --max-sentences $MAX_SENTENCES \
+    --max-sentences-valid $MAX_SENTENCE_VALID \
     --task $TASK \
+    --source-lang $SRC --target-lang $TGT \
     --update-freq 1 \
     --seed $SEED \
-    --add-prev-output-tokens \
     --reset-optimizer --reset-dataloader --reset-meters \
     --required-batch-size-multiple 1 \
-    --init-token 0 \
-    --separator-token 2 \
     --arch bart_small \
-    --criterion sentence_prediction \
-    --num-classes $NUM_CLASSES \
+    --criterion label_smoothed_cross_entropy \
+    --label-smoothing 0.1 \
     --dropout 0.1 --attention-dropout 0.1 \
     --weight-decay 0.01 --optimizer adam --adam-betas "(0.9, 0.98)" --adam-eps 1e-08 \
     --clip-norm 0.0 \
     --find-unused-parameters \
     --bpe 'sentencepiece' \
     --sentencepiece-vocab $SENTENCE_PIECE_MODEL \
-    --save-dir $SAVE_DIR \
-    --best-checkpoint-metric sprcorr \
     --maximize-best-checkpoint-metric \
+    --best-checkpoint-metric 'bleu' \
+    --eval-bleu \
+    --save-dir $SAVE_DIR \
+    --skip-invalid-size-inputs-valid-test \
     --fp16 \
     --lr-scheduler polynomial_decay \
     --lr $LR \
@@ -52,5 +55,4 @@ fairseq-train $DATA_PATH \
     --log-interval 5 \
     --warmup-updates $((6*$MAX_UPDATE/100)) \
     --max-epoch $MAX_EPOCH \
-    --regression-target \
-    --valid-subset $VALID_SUBSET
+    --valid-subset $VALID_SUBSET \

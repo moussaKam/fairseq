@@ -22,7 +22,7 @@ for directory in directories:
     test_events = os.path.join(directory,'test')
     ea = event_accumulator.EventAccumulator(valid_events, size_guidance={event_accumulator.SCALARS: 0})
     ea.Reload()
-    for el in ea.Scalars('acuuracy'):
+    for el in ea.Scalars('accuracy'):
         valid_scores.append(el.value)
     best_valid.append(max(valid_scores))
     if os.path.isdir(test_events):

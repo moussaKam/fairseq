@@ -1,16 +1,16 @@
-DATA_SET='STS-B'
+DATA_SET='XNLI'
 MODEL='M_multilingual'
 TASK='sentence_prediction'
-DATA_PATH='/datadisks/datadisk1/language-adaptive-pretraining/GLUE_data/STS-B-bin'
+DATA_PATH='../../../FLUE_data/data-FLUE-XNLI'
 MODEL_PATH='../../../checkpoints/denoising/mutilingual/ms64_mu150000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
-MAX_SENTENCES=32
-MAX_UPDATE=4400
-LR=3e-05
-MAX_EPOCH=20
+MAX_SENTENCES=128
+MAX_UPDATE=46125
+LR=5e-05
+MAX_EPOCH=15
 DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../../sentence_piece_multilingual.model'
-VALID_SUBSET='valid'
-NUM_CLASSES=1
+VALID_SUBSET='valid,test'
+NUM_CLASSES=3
 SEED=$1
 
 TENSORBOARD_LOGS=../../../tensorboard_logs/$TASK/$DATA_SET/$MODEL/ms${MAX_SENTENCES}_mu${MAX_UPDATE}_lr${LR}_me${MAX_EPOCH}_dws${DISTRIBUTED_WORLD_SIZE}/$SEED
@@ -38,9 +38,11 @@ fairseq-train $DATA_PATH \
     --find-unused-parameters \
     --bpe 'sentencepiece' \
     --sentencepiece-vocab $SENTENCE_PIECE_MODEL \
-    --save-dir $SAVE_DIR \
-    --best-checkpoint-metric sprcorr \
     --maximize-best-checkpoint-metric \
+    --best-checkpoint-metric 'accuracy' \
+    --no-save \
+    --save-dir $SAVE_DIR \
+    --skip-invalid-size-inputs-valid-test \
     --fp16 \
     --lr-scheduler polynomial_decay \
     --lr $LR \
@@ -52,5 +54,4 @@ fairseq-train $DATA_PATH \
     --log-interval 5 \
     --warmup-updates $((6*$MAX_UPDATE/100)) \
     --max-epoch $MAX_EPOCH \
-    --regression-target \
     --valid-subset $VALID_SUBSET

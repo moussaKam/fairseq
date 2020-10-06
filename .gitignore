@@ -1,12 +1,10 @@
 pretraining_data/*
-<<<<<<< HEAD
 FLUE_data/
 GLUE_data/
 FLUE_data/*
 GLUE_data/*
-=======
 FLUE_data/*
->>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
+summarization_fr_data
 checkpoints/*
 logs/
 experiments/pretraining/slurm_files

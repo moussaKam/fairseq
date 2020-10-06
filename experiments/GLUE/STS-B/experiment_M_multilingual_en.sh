@@ -52,4 +52,6 @@ fairseq-train $DATA_PATH \
     --log-interval 5 \
     --warmup-updates $((6*$MAX_UPDATE/100)) \
     --max-epoch $MAX_EPOCH \
+    --maximize-best-checkpoint-metric \
+    --best-checkpoint-metric sprcorr \
     --valid-subset $VALID_SUBSET

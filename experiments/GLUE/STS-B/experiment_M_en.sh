@@ -1,5 +1,5 @@
 DATA_SET='STS-B'
-MODEL='M_multilingual_en'
+MODEL='M_en'
 TASK='sentence_prediction'
 DATA_PATH='/datadisks/datadisk1/language-adaptive-pretraining/GLUE_data/STS-B-bin'
 MODEL_PATH='../../../checkpoints/denoising/en/ms64_mu105000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
@@ -52,4 +52,6 @@ fairseq-train $DATA_PATH \
     --log-interval 5 \
     --warmup-updates $((6*$MAX_UPDATE/100)) \
     --max-epoch $MAX_EPOCH \
+    --maximize-best-checkpoint-metric \
+    --best-checkpoint-metric sprcorr \
     --valid-subset $VALID_SUBSET

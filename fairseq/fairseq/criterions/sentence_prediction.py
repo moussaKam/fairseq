@@ -12,6 +12,7 @@ from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
 #<<<<<<< HEAD
 from scipy import stats
+import numpy as np
 #=======
 
 #>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
@@ -90,13 +91,10 @@ class SentencePredictionCriterion(FairseqCriterion):
         ntokens = sum(log.get('ntokens', 0) for log in logging_outputs)
         nsentences = sum(log.get('nsentences', 0) for log in logging_outputs)
         sample_size = sum(log.get('sample_size', 0) for log in logging_outputs)
-#<<<<<<< HEAD
         TP = sum(log.get('TP', 0) for log in logging_outputs)
         TN = sum(log.get('TN', 0) for log in logging_outputs)
         FP = sum(log.get('FP', 0) for log in logging_outputs)
         FN = sum(log.get('FN', 0) for log in logging_outputs)
-#=======
-#>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
 
         metrics.log_scalar('loss', loss_sum / sample_size / math.log(2), sample_size, round=3)
         if sample_size != ntokens:
@@ -105,14 +103,14 @@ class SentencePredictionCriterion(FairseqCriterion):
         if len(logging_outputs) > 0 and 'ncorrect' in logging_outputs[0]:
             ncorrect = sum(log.get('ncorrect', 0) for log in logging_outputs)
             metrics.log_scalar('accuracy', 100.0 * ncorrect / nsentences, nsentences, round=2)
-#<<<<<<< HEAD
             metrics.log_scalar('mcc', 100.0 * (TP * TN - FP * FN) / (((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN)) ** .5), round=2) 
-        
-        #if self.regression_target:
-            #print(log.get('logits', 0) for log in logging_outputs)
-#=======
+    
+        if 'logits' in logging_outputs[0]:
+            logits = np.concatenate([log.get('logits') for log in logging_outputs])
+            targets = np.concatenate([log.get('targets') for log in logging_outputs])
+            spearman_corr = stats.spearmanr(logits, targets).correlation
+            metrics.log_scalar('sprcorr', 100.0 * spearman_corr, round=2)
 
-#>>>>>>> 626cb8f7edafab2d19b280ba4c16de4dd6241dc4
     @staticmethod
     def logging_outputs_can_be_summed() -> bool:
         """
