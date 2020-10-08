@@ -4,13 +4,13 @@ TASK='translation'
 DATA_PATH='../../../summarization_fr_data/summarization_title/data-bin'
 MODEL_PATH='../../../checkpoints/denoising/fr/ms64_mu105000_si5000_lr0.0004_me20_dws4/checkpoint_last.pt'
 MAX_SENTENCES=32
-MAX_SENTENCE_VALID=300
+MAX_SENTENCE_VALID=150
 MAX_UPDATE=23952
 LR=1e-04
 MAX_EPOCH=25
 DISTRIBUTED_WORLD_SIZE=1
 SENTENCE_PIECE_MODEL='../../../sentence_piece_multilingual.model'
-VALID_SUBSET='valid,test'
+VALID_SUBSET='valid'
 SEED=$1
 SRC=article
 TGT=title
@@ -39,9 +39,9 @@ fairseq-train $DATA_PATH \
     --find-unused-parameters \
     --bpe 'sentencepiece' \
     --sentencepiece-vocab $SENTENCE_PIECE_MODEL \
-    --maximize-best-checkpoint-metric \
-    --best-checkpoint-metric 'bleu' \
-    --eval-bleu \
+    --eval-scorer eval-precision-recall \
+    --best-checkpoint-metric f-1 --maximize-best-checkpoint-metric \
+    --eval-scorer-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
     --save-dir $SAVE_DIR \
     --skip-invalid-size-inputs-valid-test \
     --fp16 \
